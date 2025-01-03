@@ -5,7 +5,7 @@ import { createContext, ReactNode, useContext, useState } from "react";
 
 const API_URL = 'https://api.themoviedb.org/3'
 const API_KEY = '961641fcc7f5229c2503cc1c88ef251e'
-const URL_IMAGE = 'https://image.tmdb.org/t/p/original'
+const IMAGE_PATH = 'https://image.tmdb.org/t/p/original'
 
 interface Genre {
   id:number;
@@ -23,43 +23,51 @@ interface Movie {
 }
 
 interface MoviesContextProps {
-  movie: Movie | null;
-  fetchMovies: (id: number) => Promise<void>;
+  movies: Movie [];
+  fetchMovies: () => Promise<void>;
   getImageUrl:(path: string) => string;
 }
 
 const MoviesContext = createContext<MoviesContextProps | undefined> (undefined);
 
 
-
-
-/* export const MoviesProvider= ({ children} : { children: ReactNode }) */
 export const MoviesProvider: React.FC <{children: ReactNode}> = ({children}) => {
-const [ movie, setMovie] = useState<Movie | null>(null);
+const [ movies, setMovies] = useState<Movie []>([]);
 
 
-const fetchMovies = async (id: number) => {
-  console.log("inicia llamada de api")
+
+
+
+const fetchMovies = async ( query: string = "", page: number = 1) => {
+
   try{
-    const response = await axios.get(`${API_URL}/movie/${id}`,{
-      params: {api_key: API_KEY}
-     
-    
+    const response = await axios.get(`${API_URL}/movie/popular`,{
+      params: {
+        api_key: API_KEY,
+        query,
+        page,
+      
+      }
     });
-    console.log("respues de la api", response.data)
-    setMovie(response.data)
-    console.log("peliculas actualizadas", response.data)
+
+    setMovies(response.data.results)
+
   } catch ( error )  {
     console.error ('Error fectching movies:', error)
   }
 }
+ 
+const getImageUrl = (path: string) => {
 
-const getImageUrl = (path: string) => `${URL_IMAGE}${path}`
+  return `${IMAGE_PATH}${path}`
+
+
+}
 
 
 
 return (
-  <MoviesContext.Provider value ={{movie, fetchMovies, getImageUrl}}>
+  <MoviesContext.Provider value ={{movies, fetchMovies, getImageUrl}}>
     {children}
 
   </MoviesContext.Provider>
