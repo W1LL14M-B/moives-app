@@ -10,7 +10,7 @@ const Movies: React.FC = () => {
 
 
   useEffect(() => {
-    fetchMovies();
+    fetchMovies(query, page);
   }, [query, page])
 
   const handleNextPage = () => setPage((prevPage) => prevPage + 1);

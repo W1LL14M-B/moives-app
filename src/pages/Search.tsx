@@ -74,12 +74,3 @@ const Search = () => {
 export default Search  */
 
 
-
-
-const Search = () => {
-  return (
-    <div>Search</div>
-  )
-}
-
-export default Search
