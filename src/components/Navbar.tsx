@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import Movies from "../pages/Movies";
 import Search from "../pages/Search";
+import MovieDetalle from "../pages/MovieDetalle";
 
 const Navbar = () => {
   return (
@@ -51,6 +52,9 @@ const Navbar = () => {
       <Routes>
         <Route path="/movies" element={<Movies />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/movies/:id"  element={<MovieDetalle/>} />
+
+
       </Routes>
     </nav>
   );

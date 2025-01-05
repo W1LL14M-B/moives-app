@@ -1,76 +1,117 @@
-/*  import { useState } from "react"
 import { useMovies } from "../hook/MoviesContext";
-
-
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Search = () => {
+  const { movies, fetchMovies, getImageUrl, totalPages } = useMovies();
+  const [searchText, setSearchText] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const resultsPerPage = 4;
 
-  const { fetchMovies, movies, getImageUrl, totalPages } = useMovies();
-  const [query, setQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  useEffect(() => {
+    if (!searchText) {
+      fetchMovies("", 1);
+    }
+  }, []);
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+  };
 
-  const handleSearch = async () => {
-    await fetchMovies(query, 1);
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setCurrentPage(1);
-  }
+    if (searchText.trim()) {
+      await fetchMovies(searchText, 1);
+    }
+  };
 
-  const handlePageChangue = async (page: number) => {
-    await fetchMovies(query, page);
+  const handlePageChange = async (page: number) => {
     setCurrentPage(page);
-  }
+    if (searchText.trim()) {
+      await fetchMovies(searchText, page);
+    }
+  };
+
+  const totalResults = Math.ceil(totalPages / resultsPerPage);
 
   return (
-    <div>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Buscarr una pelicula..."
-      />
-      <button onClick={handleSearch}> </button>
+    <>
+      <h1>SearchPage</h1>
+      <hr />
 
       <div className="row">
-        {movies.map((movie) => (
+        <div className="col-5">
+          <form onSubmit={handleSearch}>
+            <input
+              type="text"
+              placeholder="Search a hero"
+              className="form-control"
+              name="searchText"
+              autoComplete="off"
+              value={searchText}
+              onChange={handleInputChange}
+            />
+            <button className="btn btn-outline-primary mt-1">Search</button>
+          </form>
+        </div>
+        <div className="col-7">
+          <h4>Results</h4>
+          <hr />
 
-          <div key={movie.id} className="col-md-3 mb-4">
-            <div className="card h-100">
-              <img
-                src={getImageUrl(movie.poster_path)}
-                alt={movie.title}
-                className="card-img-top"
-                style={{ height: "300px", objectFit: "cover" }}
-              />
-              <div className="card-body">
-                <h3 className="card-title">{movie.title}</h3>
-                <p className="card-text-truncante">{movie.overview}</p>
-                <p className="card-text">
-                  <span>Rating: {movie.vote_average}</span>
-                </p>
-              </div>
-            </div>
+          <div className="row">
+            {movies.length === 0 ? (
+              <p>No hay resultados</p>
+            ) : (
+              movies.map((movie) => (
+                <div key={movie.id} className="col-md-3 mb-4">
+                  <div className="card h-100">
+                    <img
+                      src={getImageUrl(movie.poster_path)}
+                      alt={movie.title}
+                      className="card-img-top"
+                      style={{ height: "300px", objectFit: "cover" }}
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title">{movie.title}</h5>
+                      <Link
+                        to={`/movies/${movie.id}}`}
+                        className="btn btn-link"
+                      >
+                        Mas...
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-        ))}
+
+          {totalPages > 1 && (
+            <div className="d-flex justify.content-center">
+              <button
+                className="btn btn-outline-secondary"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Anterior
+              </button>
+              <span className="mx-3">
+                {currentPage} / {totalResults}
+              </span>
+              <button
+                className="btn btn-outline-secondary"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalResults}
+              >
+                Siguiente
+              </button>
+            </div>
+          )}
+        </div>
       </div>
+    </>
+  );
+};
 
-      <div>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChangue(index + 1)}
-            disabled={currentPage === index + 1}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
-
-
-
-    </div>
-  )
-}
-
-export default Search  */
-
-
+export default Search;

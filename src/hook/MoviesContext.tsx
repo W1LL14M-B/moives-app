@@ -12,6 +12,13 @@ interface Genre {
   name: string;
 }
 
+
+interface actor {
+  id: number;
+  name: string;
+  profile_path: string;
+} 
+
 interface Movie {
   id: number;
   title: string;
@@ -22,14 +29,16 @@ interface Movie {
   vote_average: number;
 }
 
+
 interface MoviesContextProps {
   movies: Movie [];
-  //fetchMovies: () => Promise<void>;
   fetchMovies: ( query: string, page: number) => Promise<void>;
   getImageUrl:(path: string) => string;
- // currentPage: string;
+ //getMovieDetails : ( id: number) => Promise<Movie | null >; 
   totalPages: number;
-  isLoading: boolean;
+
+
+
 }
 
 const MoviesContext = createContext<MoviesContextProps | undefined> (undefined);
@@ -37,9 +46,9 @@ const MoviesContext = createContext<MoviesContextProps | undefined> (undefined);
 
 export const MoviesProvider: React.FC <{children: ReactNode}> = ({children}) => {
 const [ movies, setMovies] = useState<Movie []>([]);
-const [currentPage, setCurrentPage] = useState<number>();
+
 const [totalPages, setTotalPages] = useState<number>(0);
-const [isLoading, setIsLoading] = useState<boolean>(false);
+
  
 
 
@@ -48,18 +57,11 @@ const [isLoading, setIsLoading] = useState<boolean>(false);
 const fetchMovies = async ( query: string = "", page: number = 1) => {
 
   try{
-      
-    setIsLoading(true)
+  setMovies([])
+const endpoint = query 
+? `${API_URL}/search/movie`  
+: `${API_URL}/movie/popular`;
 
-    /* const response = await axios.get(`${API_URL}/movie/popular`,{
-      params: {
-        api_key: API_KEY,
-        query,
-        page,
-      
-      } */
-
-const endpoint = query ? `${API_URL}/search/popular`  : `${API_URL}/movie/popular`;
 const response = await axios.get (endpoint, {
   params: {
     api_key: API_KEY,
@@ -69,26 +71,36 @@ const response = await axios.get (endpoint, {
     });
 
     const { results, total_pages } = response.data
-    setMovies ( page === 1 ? results : [...movies, ...results]);
-    setCurrentPage(page);
+    setMovies(results)
+
     setTotalPages(total_pages)
-    //setMovies(response.data.results)
+
+ 
 
   } catch ( error )  {
     console.error ('Error fectching movies:', error)
-  } finally {
-    setIsLoading(false)
-  }
+  } 
 }
  
 const getImageUrl = (path: string) => { 
   return `${IMAGE_PATH}${path}`
 }
+/* 
+const getMovieDetails = async (id: number) : Promise<MovieDetalle | null > =>  {
+try {
+  const response = axios.get(`${API_URL}/movie/${id}`,{
 
+params: {
+api_key: API_KEY
+
+
+}
+})
+ */
 
 
 return (
-  <MoviesContext.Provider value ={{movies, fetchMovies, getImageUrl, totalPages, isLoading}}>
+  <MoviesContext.Provider value ={{movies, fetchMovies, getImageUrl, totalPages}}>
     {children}
 
   </MoviesContext.Provider>
