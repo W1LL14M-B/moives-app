@@ -1,9 +1,6 @@
-
-
-
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const API_URL = "https://api.themoviedb.org/3";
 const API_KEY = "961641fcc7f5229c2503cc1c88ef251e";
@@ -41,54 +38,79 @@ const MovieDetalle = () => {
           params: { api_key: API_KEY },
         });
 
-        const castResponse = await axios.get(`${API_URL}/movie/${id}/credits`, {
+        const castReponse = await axios.get(`${API_URL}/movie/${id}/credits`, {
           params: { api_key: API_KEY },
         });
 
         setMovie(movieResponse.data);
-        setCast(castResponse.data.cast.slice(0, 5)); // Limita a los 5 primeros actores
+        setCast(castReponse.data.cast.slice(0, 5));
       } catch (error) {
-        console.error("Error fetching movie details or cast:", error);
+        console.error("Error fetching movie details osr cast:", error);
       }
     };
-
     fetchDetails();
   }, [id]);
 
   if (!movie) {
-    return <div>Cargando...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
-    <div>
-      <h1>{movie.title}</h1>
-      <img src={`${IMAGE_PATH}${movie.poster_path}`} alt={movie.title} />
-      <p>{movie.overview}</p>
-      <p>
-        <strong>Fecha de lanzamiento:</strong> {movie.release_date}
-      </p>
-      <p>
-        <strong>Puntuación:</strong> {movie.vote_average}
-      </p>
-      <p>
-        <strong>Géneros:</strong>{" "}
-        {movie.genres.map((genre) => genre.name).join(", ")}
-      </p>
-      <h3>Actores principales:</h3>
-      <ul>
-        {cast.map((actor) => (
-          <li key={actor.id}>
-            <p>{actor.name}</p>
-            {actor.profile_path && (
-              <img
-                src={`${IMAGE_PATH}${actor.profile_path}`}
-                alt={actor.name}
-                style={{ width: "50px", borderRadius: "5px" }}
-              />
-            )}
-          </li>
-        ))}
-      </ul>
+    <div className="container mt-4">
+      <div className="row">
+        <div className="col-md-6">
+          <div className="card">
+            <h1>{movie.title}</h1>
+            <img
+              src={`${IMAGE_PATH}${movie.poster_path}`}
+              alt={movie.title}
+              className="card-img-top"
+            />
+            <div className="card-body">
+              <p className="card-title">{movie.overview}</p>
+              <p className="card-text">
+                <strong>Puntuacion:</strong>
+                {movie.vote_average}
+              </p>
+              <p>
+                <strong>Fecha de lanzamiento:</strong> {movie.release_date}
+              </p>
+              <p>
+                <strong>Generos:</strong>{" "}
+                {movie.genres.map((genre) => genre.name).join(",")}
+              </p>
+            </div>
+            <div className="col-md-6">
+            <h2>actores principales</h2>
+            <div className="row">
+            <ul>
+              {cast.map((actor) => (
+                <li key={actor.id} className="col-6 col-md-4 mb-4">
+                  <div className="card">
+                  <p>{actor.name}</p>
+                  {actor.profile_path && (
+                    <img
+                      src={`${IMAGE_PATH}${actor.profile_path}`}
+                      alt={actor.name}
+                      className="card-img-top"
+                    />
+                  )}
+
+                  </div>
+                 
+                </li>
+              ))}
+            </ul>
+
+            </div>
+          
+
+            </div>
+
+          
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
