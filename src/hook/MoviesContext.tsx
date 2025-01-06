@@ -10,10 +10,10 @@ interface Genre {
   name: string;
 }
 
-interface Actor {
+interface Cast {
   id: number;
   name: string;
-  profile_path: string;
+  profile_path: string | null;
 }
 
 interface Movie {
@@ -31,7 +31,7 @@ interface MoviesContextProps {
   fetchMovies: (query: string, page: number) => Promise<void>;
   getImageUrl: (path: string) => string;
   totalPages: number;
-  getMovieDetails: (id: number) => Promise<Movie | null>;
+  //fetchMovieDetails: (id: number) => Promise<Movie | null>;
 }
 
 const MoviesContext = createContext<MoviesContextProps | undefined>(undefined);
@@ -40,7 +40,7 @@ export const MoviesProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [movieDetails, setMovieDetails] = useState<Movie | null>(null);
+
   const [totalPages, setTotalPages] = useState<number>(0);
 
   const fetchMovies = async (query: string = "", page: number = 1) => {
@@ -59,6 +59,7 @@ export const MoviesProvider: React.FC<{ children: ReactNode }> = ({
       });
 
       const { results, total_pages } = response.data;
+
       setMovies(results);
 
       setTotalPages(total_pages);
@@ -71,35 +72,14 @@ export const MoviesProvider: React.FC<{ children: ReactNode }> = ({
     return `${IMAGE_PATH}${path}`;
   };
 
-  const getMovieDetails = async (id: number) => {
-    try {
-      const response = axios.get(`${API_URL}/movie/${id}`, {
-        params: {
-          api_key: API_KEY,
-        },
-      });
 
-      const movie = (await response).data;
-      const castResponse = await axios.get(`${API_URL}/movie/${id}/credits`, {
-        params: {
-          api_key: API_KEY,
-        },
-      });
 
-      const actors= castResponse.data.cast;
-      movie.actors = actors;
 
-      setMovieDetails(movie);
-      return movie;
-    } catch (error) {
-      console.error("Error detalles:", error);
-      return null;
-    }
-  };
+
 
   return (
     <MoviesContext.Provider
-      value={{ movies, fetchMovies, getImageUrl, totalPages, getMovieDetails }}
+      value={{ movies, fetchMovies, getImageUrl, totalPages, }}
     >
       {children}
     </MoviesContext.Provider>
