@@ -57,7 +57,7 @@ setShowFavorites((prevShowFavorites) => !prevShowFavorites)
         className="btn btn-link"
 
         >
-{showFavorites ? "Ver todas las peliculas" : "ver solo favorites"}
+{showFavorites ? "Ver todas las peliculas" : "Ver solo favorites"}
 
         </button>
 
