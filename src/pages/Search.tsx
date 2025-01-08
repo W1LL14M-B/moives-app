@@ -1,6 +1,8 @@
 import { useMovies } from "../hook/MoviesContext";
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+
 
 const Search = () => {
   const { movies, fetchMovies, getImageUrl, totalPages } = useMovies();
@@ -39,6 +41,23 @@ const Search = () => {
     <>
       <h1>SearchPage</h1>
       <hr />
+        <Helmet>
+              <title>{`Películas - Página ${currentPage}`}</title>
+              <meta
+                name="description"
+                content="Explora nuestra lista de películas y guarda tus favoritas."
+              />
+              <meta property="og:title" content="Películas" />
+              <meta
+                property="og:description"
+                content="Explora nuestra lista de películas y guarda tus favoritas."
+              />
+              <meta
+                property="og:image"
+                content="https://image.tmdb.org/t/p/original"
+              />
+              <meta property="og:url" content={window.location.href} />
+            </Helmet>
 
       <div className="row">
         <div className="col-5">

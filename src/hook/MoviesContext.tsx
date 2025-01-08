@@ -10,8 +10,6 @@ interface Genre {
   name: string;
 }
 
-
-
 interface Movie {
   id: number;
   title: string;
@@ -27,7 +25,6 @@ interface MoviesContextProps {
   fetchMovies: (query: string, page: number) => Promise<void>;
   getImageUrl: (path: string) => string;
   totalPages: number;
-
 }
 
 const MoviesContext = createContext<MoviesContextProps | undefined>(undefined);
@@ -40,7 +37,6 @@ export const MoviesProvider: React.FC<{ children: ReactNode }> = ({
   const [totalPages, setTotalPages] = useState<number>(0);
 
   const fetchMovies = async (query: string = "", page: number = 1) => {
-    console.log("movie:", fetchMovies)
     try {
       setMovies([]);
       const endpoint = query
@@ -65,17 +61,9 @@ export const MoviesProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-
-   
-  
-    
-
-  
-
   const getImageUrl = (path: string) => {
     return `${IMAGE_PATH}${path}`;
   };
-
 
   return (
     <MoviesContext.Provider

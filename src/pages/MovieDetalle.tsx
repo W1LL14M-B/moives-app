@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-
 const API_URL = "https://api.themoviedb.org/3";
 const API_KEY = "961641fcc7f5229c2503cc1c88ef251e";
 const IMAGE_PATH = "https://image.tmdb.org/t/p/original";
-
 
 interface Genre {
   id: number;
@@ -23,8 +21,6 @@ interface Trailer {
   key: string;
   name: string;
 }
-
-
 
 interface Movie {
   title: string;
@@ -51,7 +47,6 @@ const MovieDetalle = () => {
         const castReponse = await axios.get(`${API_URL}/movie/${id}/credits`, {
           params: { api_key: API_KEY },
         });
-        console.log("card:", castReponse);
 
         const trailerResponse = await axios.get(
           `${API_URL}/movie/${id}/videos`,
@@ -59,14 +54,12 @@ const MovieDetalle = () => {
             params: { api_key: API_KEY },
           }
         );
-        console.log("trailer", trailerResponse);
 
         setMovie(movieResponse.data);
         setCast(castReponse.data.cast.slice(0, 5));
         if (trailerResponse.data.results.length > 0) {
           setTrailerKey(trailerResponse.data.results[0]);
         }
-     
       } catch (error) {
         console.error("Error fetching movie details osr cast:", error);
       }
@@ -127,21 +120,19 @@ const MovieDetalle = () => {
           </div>
         </div>
 
-{trailerkey && (
-              <div className="card-body">
-                <h3>Trailer</h3>
-                <div className="embed-responsive embed-responsive-16by9">
-                  <iframe
-                    className="embed-responsive-item"
-                    src={`https://www.youtube.com/embed/${trailerkey}?autoplay=1`}
-                    title={trailerkey.name}
-                    allowFullScreen
-                 
-                  ></iframe>
-                </div>
-              </div>
-            )}
- 
+        {trailerkey && (
+          <div className="card-body">
+            <h3>Trailer</h3>
+            <div className="embed-responsive embed-responsive-16by9">
+              <iframe
+                className="embed-responsive-item"
+                src={`https://www.youtube.com/embed/${trailerkey}?autoplay=1`}
+                title={trailerkey.name}
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

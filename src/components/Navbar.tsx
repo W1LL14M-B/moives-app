@@ -35,28 +35,14 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
-            <form className="d-flex" role="search">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
           </div>
         </div>
       </nav>
       <Routes>
-      <Route path="/"  element={<Navigate to="/movies"/>} />
+        <Route path="/" element={<Navigate to="/movies" />} />
         <Route path="/movies" element={<Movies />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/movies/:id"  element={<MovieDetalle/>} />
-       
-
-
+        <Route path="/movies/:id" element={<MovieDetalle />} />
       </Routes>
     </nav>
   );
