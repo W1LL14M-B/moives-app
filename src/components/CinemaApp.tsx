@@ -1,9 +1,15 @@
-import Navbar from "./Navbar";
+import { AuthProvider } from "../hook/AutoContex";
+import AppRouter from "../router/AppRouter";
+
 
 const CinemaApp = () => {
   return (
     <div>
-      <Navbar />
+{/*       <Navbar /> */}
+
+<AuthProvider> 
+  <AppRouter/>
+ </AuthProvider> 
     </div>
   );
 };

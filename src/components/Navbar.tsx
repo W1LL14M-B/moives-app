@@ -1,9 +1,16 @@
-import { Routes, Route, Link, Navigate } from "react-router-dom";
-import Movies from "../pages/Movies";
-import Search from "../pages/Search";
-import MovieDetalle from "../pages/MovieDetalle";
+import {Link,useNavigate } from "react-router-dom";
+
+import { useAuth } from "../hook/AutoContex";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const handleLogout = () => {
+
+    logout();
+    navigate("/login"); 
+  };
+
   return (
     <nav>
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark p-2">
@@ -35,15 +42,21 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
+            <ul className="navbar-nav ml-auto">
+              <span className="nav-item nav-link text-info">
+                William Benavides
+              </span>
+
+                <button
+                  className="nav-item nav-link btn"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+            </ul>
           </div>
         </div>
       </nav>
-      <Routes>
-        <Route path="/" element={<Navigate to="/movies" />} />
-        <Route path="/movies" element={<Movies />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/movies/:id" element={<MovieDetalle />} />
-      </Routes>
     </nav>
   );
 };
